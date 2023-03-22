@@ -59,20 +59,23 @@ app.get("/search_job_info", (req, res) => {
   // console.log("Hello");
   const jobTitle = req.query.jobTitle.toLowerCase();
   const location = req.query.location.toLowerCase();
-  const remote = req.query.remote.toLowerCase();
-  const onsite = req.query.onsite.toLowerCase();
-  const partial = req.query.partial.toLowerCase();
+  const jobType = req.query.jobType.toLowerCase();
+  const skill = req.query.skill.toLowerCase();
+  const expected = req.query.expected.toLowerCase();
+  const experience = req.query.experience.toLowerCase();
 
-  console.log(jobTitle, location, remote, onsite, partial);
+  // console.log(jobTitle, location, jobType, expected, experience, skill);
   const query =
-    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ? AND LOWER(jobType) LIKE ? AND LOWER(jobType) LIKE ?";
+    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(skills) LIKE ? AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ?";
   const params = [
     `%${jobTitle}%`,
     `%${location}%`,
-    `%${remote}%`,
-    `%${onsite}%`,
-    `%${partial}%`,
+    `%${jobType}%`,
+    `%${skill}%`,
+    `%${expected}%`,
+    `%${experience}%`,
   ];
+
   connection.query(query, params, (err, rows) => {
     if (err) {
       console.log(err);
