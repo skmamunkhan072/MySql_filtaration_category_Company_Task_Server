@@ -6,8 +6,6 @@ require("dotenv").config();
 const app = express();
 const port = 5000;
 
-// app.use(bodyParser.json());
-
 app.use(express.json());
 app.use(cors());
 
@@ -15,7 +13,13 @@ app.use(cors());
 app.get("/job_info", (req, res) => {
   connection.query("SELECT * FROM all_job_information", (err, result) => {
     if (err) console.log(err);
-    // console.log(result);
+    let allJobData = [];
+    for (const data of result) {
+      const jobData = JSON.parse(data?.skills);
+      data["skills"] = jobData;
+      allJobData = [...allJobData, data];
+    }
+    if (!allJobData.length) return res.send([]);
     res.send(result);
   });
 });
@@ -54,53 +58,47 @@ app.post("/job_info", (req, res) => {
   );
 });
 
-// Data filter Databas
+// All Data filter Database  api
 app.get("/search_job_info", (req, res) => {
-  // console.log("Hello");
   const jobTitle = req.query.jobTitle.toLowerCase();
   const location = req.query.location.toLowerCase();
-  const jobType = req.query.jobType.toLowerCase();
-  const skill = req.query.skill.toLowerCase();
+  const remoteJobSearch = req.query.remoteJobSearch.toLowerCase();
+  const onsiteJobSearch = req.query.onsiteJobSearch.toLowerCase();
+  const partialJobSearch = req.query.partialJobSearch.toLowerCase();
   const expected = req.query.expected.toLowerCase();
   const experience = req.query.experience.toLowerCase();
+  const skillSerchDatabas = req.query.skillSerchDatabas.toLowerCase();
+  let skillQuery = `%${skillSerchDatabas}%`;
 
-  // console.log(jobTitle, location, jobType, expected, experience, skill);
   const query =
-    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(skills) LIKE ? AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ?";
+    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(jobType) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ? AND skills LIKE ?";
   const params = [
     `%${jobTitle}%`,
     `%${location}%`,
-    `%${jobType}%`,
-    `%${skill}%`,
+    `%${remoteJobSearch}%`,
+    `%${onsiteJobSearch}%`,
+    `%${partialJobSearch}%`,
     `%${expected}%`,
     `%${experience}%`,
+    `%${skillQuery}%`,
   ];
 
-  connection.query(query, params, (err, rows) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("An error occurred while processing your request.");
-    } else {
-      res.send(rows);
+  connection.query(query, params, (err, result) => {
+    if (err)
+      return res
+        .status(500)
+        .send("An error occurred while processing your request.");
+
+    let allJobData = [];
+    for (const data of result) {
+      const jobData = JSON.parse(data?.skills);
+      data["skills"] = jobData;
+      allJobData = [...allJobData, data];
     }
+    if (!allJobData.length) return res.send([]);
+    res.send(result);
   });
 });
-
-// ONE  DATA GET API
-// app.delete("/job_info/:id", (req, res) => {
-//   connection.query(
-//     "DELETE  FROM TABLENAME WHERE id=? ",
-//     [req.params.id],
-//     (err, rows) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         console.log(rows);
-//         res.send(rows);
-//       }
-//     }
-//   );
-// });
 
 app.listen(port, () =>
   console.log(`filtaration category server running on ${port}`)
