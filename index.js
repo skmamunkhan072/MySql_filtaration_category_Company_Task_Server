@@ -65,21 +65,17 @@ app.get("/search_job_info", (req, res) => {
   const jobTitle = req.query.jobTitle.toLowerCase();
   const location = req.query.location.toLowerCase();
   const remoteJobSearch = req.query.remoteJobSearch.toLowerCase();
-  const onsiteJobSearch = req.query.onsiteJobSearch.toLowerCase();
-  const partialJobSearch = req.query.partialJobSearch.toLowerCase();
   const expected = req.query.expected.toLowerCase();
   const experience = req.query.experience.toLowerCase();
   const skillSerchDatabas = req.query.skillSerchDatabas.toLowerCase();
   let skillQuery = `%${skillSerchDatabas}%`;
 
   const query =
-    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(jobType) LIKE ? AND LOWER(jobType) LIKE ?  AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ? AND skills LIKE ?";
+    "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?    AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ? AND skills LIKE ?";
   const params = [
     `%${jobTitle}%`,
     `%${location}%`,
     `%${remoteJobSearch}%`,
-    `%${onsiteJobSearch}%`,
-    `%${partialJobSearch}%`,
     `%${expected}%`,
     `%${experience}%`,
     `%${skillQuery}%`,
@@ -98,7 +94,7 @@ app.get("/search_job_info", (req, res) => {
       allJobData = [...allJobData, data];
     }
     if (!allJobData.length) return res.send([]);
-    res.send(result);
+    res.state(200).send(result);
   });
 });
 
