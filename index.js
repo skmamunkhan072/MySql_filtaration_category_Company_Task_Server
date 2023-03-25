@@ -94,7 +94,7 @@ app.get("/search_job_info", (req, res) => {
       allJobData = [...allJobData, data];
     }
     if (!allJobData.length) return res.send([]);
-    res.state(200).send(result);
+    res.send(result);
   });
 });
 
