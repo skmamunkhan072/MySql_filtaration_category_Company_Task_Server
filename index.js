@@ -74,7 +74,11 @@ app.get("/search_job_info", (req, res) => {
   const skillSerchDatabas = req.query.skillSerchDatabas
     ? req.query.skillSerchDatabas.toLowerCase()
     : "";
-  let skillQuery = `%${skillSerchDatabas}%`;
+  const allSkill = skillSerchDatabas.split(",");
+  let skillQuery;
+  for (const skil of allSkill) {
+    skillQuery = `%${skil ? skil : ""}%`;
+  }
 
   const query =
     "SELECT * FROM all_job_information WHERE LOWER(jobTitle) LIKE ? AND LOWER(location) LIKE ? AND LOWER(jobType) LIKE ?    AND LOWER(expected) LIKE ? AND LOWER(experience) LIKE ? AND skills LIKE ?";
@@ -100,6 +104,7 @@ app.get("/search_job_info", (req, res) => {
       allJobData = [...allJobData, data];
     }
     if (!allJobData.length) return res.send([]);
+    console.log(result.length);
     res.send(result);
   });
 });
