@@ -201,32 +201,28 @@ app.get("/search_result", async (req, res) => {
     // }
     // if (!allJobData.length) return res.send([]);
     res.send(result);
+
+    // id,
+    // job_title,
+    // job_duration,
+    // freelancer_type,
+    // JobLocation,
+    // english_level,
+    // years_of_experience_preferred,
+    // fixed_project,
+    // minimum_price,
+    // maximum_price,
+    // job_categories,
+    // language,
+    // project_level,
+    // projectFile,
+    // job_details,
+    // project_location_type,
+    // PersonID,
+    // project_start_date,
   });
 });
-
-// id,
-// job_title,
-// job_duration,
-// freelancer_type,
-// JobLocation,
-// english_level,
-// years_of_experience_preferred,
-// fixed_project,
-// minimum_price,
-// maximum_price,
-// job_categories,
-// language,
-// project_level,
-// projectFile,
-// job_details,
-// project_location_type,
-// PersonID,
-// project_start_date,
 
 app.listen(port, () =>
   console.log(`filtaration category server running on ${port}`)
 );
-
-// http://localhost:5000/search_job_info?jobTitle=remote&location=""&remoteJobSearch=${remoteJobSearch}&experience=${experience}&expected=${expected}&skillSerchDatabas=${skillSerchDatabas}
-
-// http://localhost:500/search_job_info?jobTitle=&location=&remoteJobSearch=remote&experience=&expected=
